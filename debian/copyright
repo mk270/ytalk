@@ -1,0 +1,53 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: YTalk
+Upstream-Contact: Andreas Kling <ytalk@impul.se>
+Source: http://ytalk.ourproject.org/
+
+Files: *
+Copyright: 1990, 1992, 1993 Britt Yenne
+License: GPL-2
+Comment:
+ As of version 3.3.0 ytalk is relicensed under the GPL which did not
+ yet exist when ytalk was written in the first place.
+
+Files: debian/*
+Copyright: 1998-2002 Steve McIntyre <93sam@debian.org>,
+           2004-2007 Philipp Kern <pkern@debian.org>,
+           2007-2008 Matthew Johnson <debian@matthew.ath.cx>,
+           2012      Jari Aalto <jari.aalto@cante.net>,
+           2015      Axel Beckert <abe@debian.org>
+License: GPL-2
+Comment:
+ While the first packaging wasn't by Steve McIntyre, he more or less
+ completely rewrote it when he took over the package:
+ .
+ > Version 3.0.2-4 (Bdale) to 3.0.3-3 (me) shows a substantial change
+ > in the packaging, switching from an older style to the "new"
+ > joeyh-style rules-and-config type of packaging that eventually
+ > morphed into debhelper. That's just about a ground-up rewrite, I'd
+ > say.
+ .
+ Steve McIntyre also stated in an e-mail to Axel Beckert that his
+ packaging always has the same licensing as the upstream project:
+ .
+ > > I need to know under which free license the Debian packaging
+ > > of ytalk is published.
+ […]
+ > […] the same as I (implicitly) use for all my packages - the same
+ > as upstream.
+ .
+ Hence the packging license may change accordingly if upstream changes
+ licensing again.
+
+License: GPL-2
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; version 2 dated June, 1991.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ On Debian GNU/Linux systems, the complete text of the GNU General
+ Public License can be found in `/usr/share/common-licenses/GPL-2'.
