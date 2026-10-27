@@ -453,12 +453,19 @@ find_daemon(addr)
 			   0, (struct sockaddr *) & remote_daemon, sizeof(remote_daemon));
 		if (n != sizeof(m2))
 			show_error("Warning: cannot write to new talk daemon");
+                /* Commented out by J. Javier Maestro:
+                 * Quick hack to make ytalk work for usernames longer than 8
+                 * characters. Apparently, talkd returns an error message when
+                 * receiving an old talk packet and this breaks ytalk.
+                 */
+                /*
 
 		IN_PORT(remote_daemon) = talkd[otalk].port;
 		n = sendto(talkd[otalk].fd, (char *) &m1, sizeof(m1),
 			   0, (struct sockaddr *) & remote_daemon, sizeof(remote_daemon));
 		if (n != sizeof(m1))
 			show_error("Warning: cannot write to old talk daemon");
+		*/
 
 		tv.tv_sec = 4L;
 		tv.tv_usec = 0L;
