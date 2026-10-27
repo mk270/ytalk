@@ -290,9 +290,9 @@ sendit(addr, d)
 		rtype = &(orsp.type);
 	} else {
 #ifdef HAVE_SNPRINTF
-		snprintf(errstr, MAXERR, "Unkown daemon type: %d", d);
+		snprintf(errstr, MAXERR, "Unknown daemon type: %d", d);
 #else
-		sprintf(errstr, "Unkown daemon type: %d", d);
+		sprintf(errstr, "Unknown daemon type: %d", d);
 #endif
 		show_error(errstr);
 		return -1;
