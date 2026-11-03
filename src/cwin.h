@@ -18,20 +18,20 @@
  *
  */
 
-extern void init_curses();
-extern void end_curses();
-extern int open_curses( /* yuser, title */ );
-extern void close_curses( /* yuser */ );
-extern void addch_curses( /* yuser, char */ );
-extern void move_curses( /* yuser, y, x */ );
-extern void clreol_curses( /* yuser */ );
-extern void clreos_curses( /* yuser */ );
-extern void scroll_curses( /* yuser */ );
-extern void keypad_curses( /* bool */ );
-extern void flush_curses( /* yuser */ );
-extern void redisplay_curses();
-extern void set_raw_curses();
-extern void set_cooked_curses();
+extern void init_curses(void);
+extern void end_curses(void);
+extern int open_curses(yuser *user, char *title);
+extern void close_curses(yuser *user);
+extern void addch_curses(yuser *user, ychar c);
+extern void move_curses(yuser *user, int y, int x);
+extern void clreol_curses(yuser *user);
+extern void clreos_curses(yuser *user);
+extern void scroll_curses(yuser *user);
+extern void keypad_curses(bool bf);
+extern void flush_curses(yuser *user);
+extern void redisplay_curses(void);
+extern void set_raw_curses(void);
+extern void set_cooked_curses(void);
 
 #ifndef getyx
 # define getyx(w,y,x)	y = w->_cury, x = w->_curx

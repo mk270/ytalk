@@ -32,8 +32,7 @@ static struct alias *alias0 = NULL;
 /* ---- local functions ---- */
 
 static char *
-get_word(p)
-	char **p;
+get_word(char **p)
 {
 	register char *c, *out;
 
@@ -52,8 +51,7 @@ get_word(p)
 }
 
 static int
-set_option(opt, value)
-	char *opt, *value;
+set_option(char *opt, char *value)
 {
 	ylong mask = 0;
 	int set_it;
@@ -142,8 +140,7 @@ set_option(opt, value)
 }
 
 static void
-read_rcfile(fname)
-	char *fname;
+read_rcfile(char *fname)
 {
 	FILE *fp;
 	char *buf, *ptr;
@@ -251,8 +248,7 @@ read_rcfile(fname)
 /* ---- global functions ---- */
 
 char *
-resolve_alias(uh)
-	char *uh;
+resolve_alias(char *uh)
 {
 	struct alias *a;
 	static char uh1[256], *at;
@@ -301,7 +297,7 @@ resolve_alias(uh)
 }
 
 void
-read_ytalkrc()
+read_ytalkrc(void)
 {
 	yuser *u;
 	char *home, *fname;

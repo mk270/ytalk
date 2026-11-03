@@ -32,16 +32,18 @@ typedef struct __mem_list {
 #define realloc_mem(addr, size) (real_realloc_mem(addr, size, __LINE__, __FILE__))
 #define free_mem(addr) (real_free_mem(addr, __LINE__, __FILE__))
 
-extern yaddr real_get_mem( /* size_t, __LINE__, __FILE__ */ );
-extern yaddr real_realloc_mem( /* yaddr, size_t, __LINE__, __FILE__ */ );
-extern void real_free_mem( /* yaddr, __LINE__, __FILE__ */ );
-extern void change_area( /* mem_list *, yaddr, yaddr, size_t */ );
-extern mem_list *find_area( /* mem_list *, yaddr */ );
-extern void clear_all();
-extern mem_list *add_area( /* mem_list *, yaddr, size_t, int, char * */ );
-extern mem_list *del_area( /* mem_list *, mem_list * */ );
+extern yaddr real_get_mem(size_t n, int line, char *file);
+extern yaddr real_realloc_mem(yaddr p, size_t n, int line, char *file);
+extern void real_free_mem(yaddr addr, int line, char *file);
+extern void change_area(mem_list *list, yaddr addr, yaddr new_addr,
+		size_t size);
+extern mem_list *find_area(mem_list *list, yaddr addr);
+extern void clear_all(void);
+extern mem_list *add_area(mem_list *list, yaddr addr, size_t size, int line,
+		char *file);
+extern mem_list *del_area(mem_list *list, mem_list *entry);
 #else
-extern yaddr get_mem( /* size_t */ );
-extern yaddr realloc_mem( /* yaddr, size_t */ );
-extern void free_mem( /* yaddr */ );
+extern yaddr get_mem(size_t n);
+extern yaddr realloc_mem(yaddr p, size_t n);
+extern void free_mem(yaddr addr);
 #endif				/* YTALK_DEBUG */

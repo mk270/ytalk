@@ -48,8 +48,7 @@ static ywin *head;		/* head of linked list */
  * Take input from the user.
  */
 static void
-curses_input(fd)
-	int fd;
+curses_input(int fd)
 {
 	register int rc;
 	static ychar buf[MAXBUF];
@@ -63,9 +62,7 @@ curses_input(fd)
 }
 
 static ywin *
-new_ywin(user, title)
-	yuser *user;
-	char *title;
+new_ywin(yuser *user, char *title)
 {
 	register ywin *out;
 	register int len;
@@ -80,9 +77,7 @@ new_ywin(user, title)
 }
 
 static void
-make_win(w, height, width, row, col)
-	ywin *w;
-	int height, width, row, col;
+make_win(ywin *w, int height, int width, int row, int col)
 {
 	if ((w->win = newwin(height, width, row, col)) == NULL) {
 		w = (ywin *) (me->term);
@@ -99,8 +94,7 @@ make_win(w, height, width, row, col)
 }
 
 static void
-draw_title(w)
-	ywin *w;
+draw_title(ywin *w)
 {
 	register int pad, x;
 	register char *t;
@@ -135,8 +129,7 @@ draw_title(w)
  * Return number of lines per window, given "wins" windows.
  */
 static int
-win_size(wins)
-	int wins;
+win_size(int wins)
 {
 	if (wins == 0)
 		return 0;
@@ -147,7 +140,7 @@ win_size(wins)
  * Break down and redraw all user windows.
  */
 static void
-curses_redraw()
+curses_redraw(void)
 {
 	register ywin *w;
 	register int row, wins, wsize;
@@ -193,7 +186,7 @@ curses_redraw()
  * Start curses and set all options.
  */
 static void
-curses_start()
+curses_start(void)
 {
 	char *term;
 	if (initscr() == NULL) {
@@ -210,8 +203,8 @@ curses_start()
 /*
  * Restart curses... window size has changed.
  */
-static RETSIGTYPE
-curses_restart()
+static void
+curses_restart(int sig)
 {
 	register ywin *w;
 
@@ -235,14 +228,14 @@ curses_restart()
 
 #ifdef SIGWINCH
 	/* some systems require we do this again */
-	signal(SIGWINCH, (void (*)())curses_restart);
+	signal(SIGWINCH, curses_restart);
 #endif
 }
 
 /* ---- global functions ---- */
 
 void
-init_curses()
+init_curses(void)
 {
 	curses_start();
 	refresh();
@@ -251,12 +244,12 @@ init_curses()
 
 #ifdef SIGWINCH
 	/* set up SIGWINCH signal handler */
-	signal(SIGWINCH, (void (*)())curses_restart);
+	signal(SIGWINCH, curses_restart);
 #endif
 }
 
 void
-end_curses()
+end_curses(void)
 {
 	move(LINES - 1, 0);
 	clrtoeol();
@@ -268,9 +261,7 @@ end_curses()
  * Open a new window.
  */
 int
-open_curses(user, title)
-	yuser *user;
-	char *title;
+open_curses(yuser *user, char *title)
 {
 	register ywin *w;
 	register int wins;
@@ -308,8 +299,7 @@ open_curses(user, title)
  * Close a window.
  */
 void
-close_curses(user)
-	yuser *user;
+close_curses(yuser *user)
 {
 	register ywin *w, *p;
 
@@ -337,9 +327,7 @@ close_curses(user)
 }
 
 void
-addch_curses(user, c)
-	yuser *user;
-	register ychar c;
+addch_curses(yuser *user, ychar c)
 {
 	register ywin *w;
 	register int x, y;
@@ -352,9 +340,7 @@ addch_curses(user, c)
 }
 
 void
-move_curses(user, y, x)
-	yuser *user;
-	register int y, x;
+move_curses(yuser *user, int y, int x)
 {
 	register ywin *w;
 
@@ -363,8 +349,7 @@ move_curses(user, y, x)
 }
 
 void
-clreol_curses(user)
-	register yuser *user;
+clreol_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -373,8 +358,7 @@ clreol_curses(user)
 }
 
 void
-clreos_curses(user)
-	register yuser *user;
+clreos_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -383,8 +367,7 @@ clreos_curses(user)
 }
 
 void
-scroll_curses(user)
-	register yuser *user;
+scroll_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -409,8 +392,7 @@ scroll_curses(user)
 }
 
 void
-keypad_curses(bf)
-	bool bf;
+keypad_curses(bool bf)
 {
 #ifdef HAVE_KEYPAD
 	keypad(((ywin *) (me->term))->win, bf);
@@ -418,8 +400,7 @@ keypad_curses(bf)
 }
 
 void
-flush_curses(user)
-	register yuser *user;
+flush_curses(yuser *user)
 {
 	register ywin *w;
 
@@ -431,7 +412,7 @@ flush_curses(user)
  * Clear and redisplay.
  */
 void
-redisplay_curses()
+redisplay_curses(void)
 {
 	register ywin *w;
 
@@ -449,7 +430,7 @@ redisplay_curses()
  * Set raw mode.
  */
 void
-set_raw_curses()
+set_raw_curses(void)
 {
 	raw();
 }
@@ -458,7 +439,7 @@ set_raw_curses()
  * Set cooked mode.
  */
 void
-set_cooked_curses()
+set_cooked_curses(void)
 {
 	noraw();
 	crmode();

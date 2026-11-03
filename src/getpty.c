@@ -31,14 +31,13 @@
 
 #if !defined(HAVE_OPENPTY) || defined(YTALK_TEST)
 int
-getpty(name)
-	char *name;
+getpty(char *name)
 {
 	register int pty, tty;
 	char *tt;
 
 #ifdef USE_DEV_PTMX
-	RETSIGTYPE(*sigchld) ();
+	void (*sigchld)(int);
 	int r = 0;
 #endif /* USE_DEV_PTMX */
 

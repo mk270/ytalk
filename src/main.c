@@ -32,8 +32,7 @@ ylong myuid;			/* global uid */
  * Clean up and exit.
  */
 void
-bail(n)
-	int n;
+bail(int n)
 {
 	kill_auto();
 	if (n == YTE_SUCCESS_PROMPT && (def_flags & FL_PROMPTQUIT))
@@ -57,8 +56,7 @@ bail(n)
  * Display an error.
  */
 void
-show_error(str)
-	register char *str;
+show_error(char *str)
 {
 	register char *syserr;
 	static int in_error = 0;
@@ -91,8 +89,7 @@ show_error(str)
  * Copy a string.
  */
 char *
-str_copy(str)
-	register char *str;
+str_copy(char *str)
 {
 	register char *out;
 	register size_t len;
@@ -108,9 +105,8 @@ str_copy(str)
 /*
  * Process signals.
  */
-static RETSIGTYPE
-got_sig(n)
-	int n;
+static void
+got_sig(int n)
 {
 	if (n == SIGINT) {
 		if (def_flags & FL_IGNBRK)
@@ -122,9 +118,7 @@ got_sig(n)
 
 /* MAIN  */
 int
-main(argc, argv)
-	int argc;
-	char **argv;
+main(int argc, char **argv)
 {
 	int sflg = 0, yflg = 0, iflg = 0, vflg = 0, qflg = 0, eflg = 0;
 	char *prog;

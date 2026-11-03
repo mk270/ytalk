@@ -46,7 +46,7 @@ int input_flag = 0;		/* flag: waiting for user input */
 int user_winch = 0;		/* flag: user window/status changed */
 
 struct fd_func {
-	void (*func) ();	/* user function */
+	void (*func)(int);	/* user function */
 };
 static struct fd_func tag[MAX_FILES];	/* one function per file descriptor */
 
@@ -54,7 +54,7 @@ static struct fd_func tag[MAX_FILES];	/* one function per file descriptor */
  * Initialize fdset data.
  */
 void
-init_fd()
+init_fd(void)
 {
 	FD_ZERO(&fdset);
 }
@@ -64,9 +64,7 @@ init_fd()
  * will be called whenever the file descriptor has input waiting.
  */
 void
-add_fd(fd, user_func)
-	int fd;
-	void (*user_func) ();
+add_fd(int fd, void (*user_func)(int))
 {
 	if (fd < 0 || fd >= MAX_FILES) {
 		show_error("add_fd: descriptor out of range");
@@ -82,8 +80,7 @@ add_fd(fd, user_func)
  * Remove a file descriptor from the checklist.
  */
 void
-remove_fd(fd)
-	int fd;
+remove_fd(int fd)
 {
 	if (fd < 0 || fd >= MAX_FILES) {
 		show_error("remove_fd: descriptor out of range");
@@ -98,10 +95,7 @@ remove_fd(fd)
  * Read an entire length of data. Returns 0 on success, -1 on error.
  */
 int
-full_read(fd, buf, len)
-	int fd;
-	register char *buf;
-	register size_t len;
+full_read(int fd, char *buf, size_t len)
 {
 	register int rc;
 
@@ -119,7 +113,7 @@ full_read(fd, buf, len)
 static ylong lastping, curtime;
 
 void
-main_loop()
+main_loop(void)
 {
 	register int fd, rc;
 	struct timeval tv;
@@ -248,7 +242,7 @@ main_loop()
  * definition library.  Hack?  maybe.  Fun, tho.
  */
 void
-input_loop()
+input_loop(void)
 {
 	register int fd, rc;
 	struct timeval tv;
@@ -319,7 +313,7 @@ input_loop()
  * then read and discard that keypress.
  */
 void
-bail_loop()
+bail_loop(void)
 {
 	char keypress;
 	full_read(0, &keypress, sizeof(char));

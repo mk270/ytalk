@@ -36,7 +36,18 @@ int show_user_list();
  * this source.
  */
 
-static void main_menu_sel();
+static void main_menu_sel(ychar key);
+
+/*
+ * Placeholder for the lines of error_menu that show_error_menu() fills in:
+ * a non-NULL func marks a line to clear.  It is never called, because the
+ * key is ' ' and menu dispatch only considers keys above that.
+ */
+static void
+error_line(ychar key)
+{
+	(void) key;
+}
 menu_item *menu_ptr = NULL;	/* current menu in processing */
 static int menu_len;		/* number of items in current menu */
 static int menu_long;		/* longest item of current menu */
@@ -44,7 +55,8 @@ static int menu_line;		/* current line number of menu */
 static int text_pos = -1;	/* text offset if non-negative */
 static int text_ypos = -1, text_xpos = -1;	/* text coord if non-negative */
 
-extern void raw_term();		/* our raw interface to the terminal */
+/* our raw interface to the terminal */
+extern void raw_term(yuser *user, int y, int x, ychar *str, int len);
 
 /* some menus... */
 
@@ -80,17 +92,17 @@ static char err_str[8][MAXERR];
 static menu_item error_menu[] = {
 	{"Ytalk Error",	NULL,		' '},
 	{"",		NULL,		' '},
-	{NULL,		show_error,	' '},
-	{NULL,		show_error,	' '},
+	{NULL,		error_line,	' '},
+	{NULL,		error_line,	' '},
 	{"",		NULL,		' '},
-	{NULL,		show_error,	' '},
-	{NULL,		show_error,	' '},
+	{NULL,		error_line,	' '},
+	{NULL,		error_line,	' '},
 	{"",		NULL,		' '},
-	{NULL,		show_error,	' '},
-	{NULL,		show_error,	' '},
+	{NULL,		error_line,	' '},
+	{NULL,		error_line,	' '},
 	{"",		NULL,		' '},
-	{NULL,		show_error,	' '},
-	{NULL,		show_error,	' '},
+	{NULL,		error_line,	' '},
+	{NULL,		error_line,	' '},
 	{"",		NULL,		'\0'}	/* MUST BE LAST */
 };
 
@@ -99,8 +111,7 @@ static menu_item error_menu[] = {
 static yuser *output_user = NULL;
 
 static void
-do_output(filename)
-	char *filename;
+do_output(char *filename)
 {
 	int fd;
 
@@ -116,8 +127,7 @@ do_output(filename)
 }
 
 static void
-do_output_user(user)
-	yuser *user;
+do_output_user(yuser *user)
 {
 	/* if he has an open descriptor, close it */
 	if (user->output_fd > 0) {
@@ -137,22 +147,20 @@ do_output_user(user)
 }
 
 static void
-do_invite(name)
-	char *name;
+do_invite(char *name)
 {
 	invite(name, 1);
 }
 
 static void
-kill_all_unconnected()
+kill_all_unconnected(void)
 {
 	while (wait_list)
 		free_user(wait_list);
 }
 
 static void
-main_menu_sel(key)
-	ychar key;
+main_menu_sel(ychar key)
 {
 	switch (key) {
 	case 'a':		/* add a user */
@@ -193,8 +201,7 @@ main_menu_sel(key)
 }
 
 static void
-option_menu_sel(key)
-	ychar key;
+option_menu_sel(ychar key)
 {
 	register yuser *u;
 	ylong old_flags;
@@ -236,8 +243,7 @@ option_menu_sel(key)
 }
 
 static void
-user_menu_sel(key)
-	ychar key;
+user_menu_sel(ychar key)
 {
 	register int i;
 	register yuser *u;
@@ -252,7 +258,8 @@ user_menu_sel(key)
 			for (u = user_list; u; u = u->unext)
 				if (u->key == key &&
 				    strcmp(u->full_name, user_menu[i].item) == 0) {
-					user_menu[0].func(u);
+					((void (*)(yuser *))
+					 user_menu[0].func)(u);
 					break;
 				}
 			break;
@@ -265,7 +272,7 @@ user_menu_sel(key)
 				 * item */
 
 static void
-generate_text_length()
+generate_text_length(void)
 {
 	menu_long = me->t_cols - MENU_EXTRA - 2;
 	if (menu_long < 5 || menu_long > MAXTEXT)
@@ -273,15 +280,13 @@ generate_text_length()
 }
 
 static void
-generate_yes_no_length()
+generate_yes_no_length(void)
 {
 	menu_long = strlen(yes_no_menu[0].item) - 2;
 }
 
 static void
-pad_str(from, len, to)
-	char *from, *to;
-	int len;
+pad_str(char *from, int len, char *to)
 {
 	for (; len > 0 && *from; len--, from++)
 		*(to++) = *from;
@@ -296,7 +301,7 @@ pad_str(from, len, to)
  * End any menu processing.
  */
 void
-kill_menu()
+kill_menu(void)
 {
 	register int i;
 
@@ -320,7 +325,7 @@ kill_menu()
  * Update menu information.
  */
 void
-update_menu()
+update_menu(void)
 {
 	register ychar *c;
 	register char *d;
@@ -369,7 +374,8 @@ update_menu()
 					if (text_pos > 0) {
 						text_str[text_pos] = '\0';	/* just to be sure */
 						kill_menu();
-						text_menu[0].func(text_str);
+						((void (*)(char *))
+						 text_menu[0].func)(text_str);
 					} else
 						kill_menu();
 					return;
@@ -527,9 +533,7 @@ update_menu()
  * Show a menu, overriding any existing menu.
  */
 int
-show_menu(menu, len)
-	menu_item *menu;
-	int len;
+show_menu(menu_item *menu, int len)
 {
 	register int i, j;
 
@@ -568,9 +572,7 @@ show_menu(menu, len)
  * Show a text entry menu, overriding any existing menu.
  */
 int
-show_text(prompt, func)
-	char *prompt;
-	void (*func) ();
+show_text(char *prompt, void (*func)(char *))
 {
 	if (me->t_rows < 3) {
 		show_error("show_text: window too small");
@@ -579,7 +581,8 @@ show_text(prompt, func)
 	/* set up the menu for display */
 
 	text_menu[0].item = prompt;
-	text_menu[0].func = func;
+	/* func really takes a char *; it is cast back where it is called */
+	text_menu[0].func = (void (*)(ychar)) func;
 	text_menu[0].key = ' ';
 
 	text_str[0] = '\0';
@@ -602,9 +605,7 @@ show_text(prompt, func)
  * Show a message in a menu.
  */
 int
-show_mesg(mesg, func)
-	char *mesg;
-	void (*func) ();
+show_mesg(char *mesg, void (*func)(ychar))
 {
 	/* set up the menu for display */
 
@@ -616,7 +617,7 @@ show_mesg(mesg, func)
 }
 
 int
-show_main_menu()
+show_main_menu(void)
 {
 	static int main_items = 0;
 
@@ -628,7 +629,7 @@ show_main_menu()
 }
 
 int
-show_option_menu()
+show_option_menu(void)
 {
 	register int i = 0;
 
@@ -702,16 +703,14 @@ show_option_menu()
 }
 
 int
-show_user_menu(title, func, metoo)
-	char *title;
-	void (*func) ();
-	int metoo;
+show_user_menu(char *title, void (*func)(yuser *), int metoo)
 {
 	register int i;
 	register yuser *u;
 
 	user_menu[0].item = title;
-	user_menu[0].func = func;
+	/* func really takes a yuser *; it is cast back where it is called */
+	user_menu[0].func = (void (*)(ychar)) func;
 	user_menu[0].key = ' ' + (metoo != 0);	/* kludge */
 
 	user_menu[1].item = "";
@@ -735,10 +734,7 @@ show_user_menu(title, func, metoo)
 }
 
 void
-stalkversion(user, buf, len)
-	yuser *user;
-	char *buf;
-	size_t len;
+stalkversion(yuser *user, char *buf, size_t len)
 {
 #ifdef HAVE_SNPRINTF
 	if (user->remote.vmajor > 2)
@@ -766,7 +762,7 @@ stalkversion(user, buf, len)
 }
 
 int
-show_user_list()
+show_user_list(void)
 {
 	register int i;
 	register yuser *u;
@@ -824,8 +820,7 @@ show_user_list()
 }
 
 int
-show_error_menu(str1, str2)
-	char *str1, *str2;
+show_error_menu(char *str1, char *str2)
 {
 	register int i;
 
@@ -850,8 +845,7 @@ show_error_menu(str1, str2)
  * for this function to hang until an answer is received.
  */
 int
-yes_no(prompt)
-	char *prompt;
+yes_no(char *prompt)
 {
 	int out = 0;
 	int esc_pressed = 0;
@@ -899,12 +893,14 @@ yes_no(prompt)
 }
 
 void
-update_user_menu()
+update_user_menu(void)
 {
 	if (menu_ptr == user_menu) {
 		redraw_term(me, 0);
 		if (user_menu[0].func)	/* it's a user menu */
-			show_user_menu(user_menu[0].item, user_menu[0].func, user_menu[0].key - ' ');
+			show_user_menu(user_menu[0].item,
+				(void (*)(yuser *)) user_menu[0].func,
+				user_menu[0].key - ' ');
 		else		/* it's a user status list */
 			show_user_list();
 		update_menu();

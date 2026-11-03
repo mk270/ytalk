@@ -25,7 +25,7 @@
  */
 typedef struct {
 	char *item;		/* item string, ie: "add a user" */
-	void (*func) ();	/* function to call */
+	void (*func)(ychar);	/* function to call */
 	ychar key;		/* activating keypress, ie: "a" */
 } menu_item;
 
@@ -33,17 +33,18 @@ extern menu_item *menu_ptr;	/* if non-NULL, current menu in processing */
 
 /* global functions */
 
-extern void kill_menu();	/* menu.c */
-extern void update_menu();	/* menu.c */
-extern int show_menu( /* menuptr, len */ );	/* menu.c */
-extern int show_text( /* prompt, func */ );	/* menu.c */
-extern int show_mesg();		/* menu.c */
-extern int show_main_menu();	/* menu.c */
-extern int show_option_menu();	/* menu.c */
-extern int show_user_menu( /* title, func */ );	/* menu.c */
-extern int show_error_menu( /* str1, str2 */ );	/* menu.c */
-extern int yes_no( /* prompt */ );	/* menu.c */
-extern void update_user_menu();	/* menu.c */
-extern void stalkversion( /* yuser, buf, len */ ); /* menu.c */
+extern void kill_menu(void);	/* menu.c */
+extern void update_menu(void);	/* menu.c */
+extern int show_menu(menu_item *menu, int len);	/* menu.c */
+extern int show_text(char *prompt, void (*func)(char *));	/* menu.c */
+extern int show_mesg(char *mesg, void (*func)(ychar));	/* menu.c */
+extern int show_main_menu(void);	/* menu.c */
+extern int show_option_menu(void);	/* menu.c */
+/* menu.c */
+extern int show_user_menu(char *title, void (*func)(yuser *), int metoo);
+extern int show_error_menu(char *str1, char *str2);	/* menu.c */
+extern int yes_no(char *prompt);	/* menu.c */
+extern void update_user_menu(void);	/* menu.c */
+extern void stalkversion(yuser *user, char *buf, size_t len); /* menu.c */
 
 /* EOF */

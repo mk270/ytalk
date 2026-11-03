@@ -25,9 +25,7 @@
 #include "gtalk.h"
 
 void
-gtalk_process(user, data)
-	yuser *user;
-	ychar data;
+gtalk_process(yuser *user, ychar data)
 {
 	if (user->gt.len >= (MAXBUF - 1)) {
 		/* If we run out of buffer space, just forget it.
@@ -64,9 +62,7 @@ gtalk_process(user, data)
 }
 
 char *
-gtalk_parse_version(str, ukill)
-	char *str;
-	ychar ukill;
+gtalk_parse_version(char *str, ychar ukill)
 {
 	char *p, *e;
 	p = strchr(str, ' ');

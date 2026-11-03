@@ -22,9 +22,7 @@
 #include "header.h"
 
 void
-vt100_process(user, data)
-	yuser *user;
-	char data;
+vt100_process(yuser *user, char data)
 {
 	int i;
 
