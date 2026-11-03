@@ -1,0 +1,17 @@
+# Output of ./configure and make
+/autom4te.cache/
+/config.h
+/config.log
+/config.status
+/stamp-h1
+/Makefile
+/docs/Makefile
+/docs/ytalk.1
+/src/Makefile
+/test/Makefile
+/src/ytalk
+/test/ptyalloc
+*.o
+
+# Backups left by autoconf and editors
+*~
