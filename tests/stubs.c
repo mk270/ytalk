@@ -1,8 +1,10 @@
 /*
  * Stand-ins for the parts of ytalk the terminal emulation calls out to
  * (curses, menus, networking), so term.c and vt100.c can be tested alone.
+ * cwin.h is included so the stubs are checked against the real prototypes.
  */
 #include "header.h"
+#include "cwin.h"
 #include "menu.h"
 
 yuser *me;
