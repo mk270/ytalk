@@ -18,6 +18,8 @@
  *
  */
 
+#include <stdbool.h>
+
 extern void init_curses(void);
 extern void end_curses(void);
 extern int open_curses(yuser *user, char *title);
