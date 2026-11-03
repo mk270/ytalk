@@ -28,7 +28,11 @@ vt100_process(yuser *user, char data)
 
 	if (data >= '0' && data <= '9') {
 		if (user->vt.got_esc > 1) {
-			user->vt.av[user->vt.ac] = (user->vt.av[user->vt.ac] * 10) + (data - '0');
+			/* cap it: a peer can send any number of digits */
+			if (user->vt.av[user->vt.ac] < 10000)
+				user->vt.av[user->vt.ac] =
+					user->vt.av[user->vt.ac] * 10 +
+					(data - '0');
 			return;
 		}
 		if (user->vt.hash == 1 && data == '8') {
