@@ -206,6 +206,7 @@ curses_start(void)
 static void
 curses_restart(int sig)
 {
+	(void) sig;
 	register ywin *w;
 
 	/* kill old windows */

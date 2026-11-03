@@ -95,8 +95,9 @@ remove_fd(int fd)
  * Read an entire length of data. Returns 0 on success, -1 on error.
  */
 int
-full_read(int fd, char *buf, size_t len)
+full_read(int fd, void *vbuf, size_t len)
 {
+	char *buf = vbuf;
 	register int rc;
 
 	while (len > 0) {

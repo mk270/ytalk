@@ -56,7 +56,8 @@ static int text_pos = -1;	/* text offset if non-negative */
 static int text_ypos = -1, text_xpos = -1;	/* text coord if non-negative */
 
 /* our raw interface to the terminal */
-extern void raw_term(yuser *user, int y, int x, ychar *str, int len);
+extern void raw_term(yuser *user, int y, int x, const void *str,
+		     int len);
 
 /* some menus... */
 

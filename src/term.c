@@ -1089,9 +1089,10 @@ spew_term(yuser *user, int fd, int rows, int cols)
  * This is an unadvertised function.
  */
 void
-raw_term(yuser *user, int y, int x, ychar *str, int len)
+raw_term(yuser *user, int y, int x, const void *str, int len)
 {
-	register ychar *c;
+	const ychar *s = (const ychar *) str;
+	register const ychar *c;
 
 	if (y < 0 || y >= user->t_rows)
 		return;
@@ -1099,9 +1100,9 @@ raw_term(yuser *user, int y, int x, ychar *str, int len)
 		return;
 	move_curses(user, y, x);
 
-	for (c = str; len > 0; len--, c++) {
+	for (c = s; len > 0; len--, c++) {
 		if (*c == '\0')
-			c = str;
+			c = s;
 		if (!is_printable(*c))
 			return;
 		addch_curses(user, *c);

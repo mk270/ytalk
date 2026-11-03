@@ -364,7 +364,7 @@ extern void free_users(void);	/* user.c */
 extern void init_fd(void);		/* fd.c */
 extern void add_fd(int fd, void (*user_func)(int));	/* fd.c */
 extern void remove_fd(int fd);	/* fd.c */
-extern int full_read(int fd, char *buf, size_t len);	/* fd.c */
+extern int full_read(int fd, void *buf, size_t len);	/* fd.c */
 extern void main_loop(void);	/* fd.c */
 extern void input_loop(void);	/* fd.c */
 extern void bail_loop(void);	/* fd.c */
